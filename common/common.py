@@ -11,6 +11,17 @@ def parse_conf_file(key_filepath='conf.json', key=None):
     :param key:
     :return:
     """
+    # Creating default conf file for app if it not exist
+    if not os.path.exists(key_filepath):
+        print(f"Creating conf file for APP: {key_filepath}")
+        with open(Path(key_filepath), 'w') as conf_file:
+            # Data to be written
+            def_conf_data = {
+                "OPENAI_API_KEY": "change_me",
+                "TELEGRAM_TOKEN": "change_me"
+            }
+            json_object = json.dumps(def_conf_data, indent=4)
+            conf_file.write(json_object)
     try:
         with open(Path(key_filepath), 'r') as f:
             data = json.load(f)
