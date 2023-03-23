@@ -30,17 +30,21 @@ def handle_files(file):
     if is_image_markup:
         # TODO simplify code bottom
         download_dir = f'download/{file.from_user.username}'
+        if not os.path.exists(download_dir):
+            print(f"Creating directory: {download_dir} for downloded files")
+            os.makedirs(download_dir)
+
         photo_file = file.photo[-1]  # biggest
         photo_file = bot.get_file(photo_file.file_id)
         downloaded_file = bot.download_file(photo_file.file_path)
         # Prepare to download file to server
         file_name = photo_file.file_unique_id + Path(photo_file.file_path).suffix
         temp_photo_file = Path(download_dir) / Path('tlg' + file_name)
-        with open(temp_photo_file, 'wb') as new_file:
+        with open(Path(temp_photo_file), 'wb') as new_file:
             # Download file
             new_file.write(downloaded_file)
         # Converting to png
-        img = Image.open(temp_photo_file)
+        img = Image.open(Path(temp_photo_file))
         png_file_path = Path(download_dir) / Path('tlg' + photo_file.file_unique_id + '.png')
         img.save(png_file_path, 'png')
         # Remove temp file
@@ -101,13 +105,13 @@ def send_photo(paths, chat_id):
     :return:
     """
     if len(paths) == 1:
-        with open(paths[0], 'rb') as image:
+        with open(Path(paths[0]), 'rb') as image:
             bot.send_photo(chat_id, image, timeout=TIMEOUT)
     else:
         album = []
         for path in paths:
             # TODO Add closing file
-            album.append(types.InputMediaPhoto(open(path, 'rb')))
+            album.append(types.InputMediaPhoto(open(Path(path), 'rb')))
         bot.send_media_group(chat_id, album, timeout=TIMEOUT)
 
 
@@ -145,7 +149,7 @@ def is_size_allowed(file_path, max_image_size=4):
     :return:
     """
     try:
-        with open(file_path, 'rb') as image:
+        with open(Path(file_path), 'rb') as image:
             file_size = get_file_size(file_path, 'mb')
             if file_size > max_image_size:
                 return False

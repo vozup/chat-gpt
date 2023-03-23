@@ -42,7 +42,7 @@ class GptDalle(Gpt):
 
             print(f"Using Image.create_variation. Prompt: {prompt}")
             try:
-                with open(prompt, "rb") as img:
+                with open(Path(prompt), "rb") as img:
                     response = self.op.Image.create_variation(
                         image=img,
                         n=count,
