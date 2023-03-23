@@ -61,6 +61,7 @@ def handle_text_messages(message):
     global is_chating
     global is_image_markup
     chat_id = message.from_user.id
+    print("Test message")
 
     if message.text == 'Home':
         # If we click on Home btn, reset markers to Off and finish chating
