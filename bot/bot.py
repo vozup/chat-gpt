@@ -51,6 +51,12 @@ def handle_files(file):
         os.remove(Path(temp_photo_file))
 
         paths = dalleGpt.request_and_download(png_file_path, download_dir=download_dir)
+        if not paths:
+            bot.send_message(file.from_user.id,
+                             "You use incorrect image file. Image must be squared size and less then 4 Mb")
+            print(f"Incorrect image file")
+            return
+
         send_photo(paths, file.from_user.id)
     else:
         bot.send_message(file.from_user.id, "Please click on button in the bottom")
@@ -61,10 +67,6 @@ def handle_text_messages(message):
     global is_chating
     global is_image_markup
     chat_id = message.from_user.id
-    print("Test message")
-    print("Test message")
-    print("Test message")
-    print("Test message")
 
     if message.text == 'Home':
         # If we click on Home btn, reset markers to Off and finish chating
@@ -98,6 +100,11 @@ def handle_text_messages(message):
         # Creating image by dalle
         if is_image_markup:
             paths = dalleGpt.request_and_download(message.text, download_dir=f'download/{message.from_user.username}')
+            if not paths:
+                bot.send_message(chat_id,
+                                 "You use incorrect image file. Image must be squared size and less then 4 Mb")
+                print("Incorrect image file")
+                return
             send_photo(paths, chat_id)
 
 
