@@ -48,7 +48,7 @@ def handle_files(file):
         png_file_path = Path(download_dir) / Path('tlg' + photo_file.file_unique_id + '.png')
         img.save(png_file_path, 'png')
         # Remove temp file
-        os.remove(temp_photo_file)
+        os.remove(Path(temp_photo_file))
 
         paths = dalleGpt.request_and_download(png_file_path, download_dir=download_dir)
         send_photo(paths, file.from_user.id)
